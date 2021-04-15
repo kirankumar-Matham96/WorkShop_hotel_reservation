@@ -1,5 +1,6 @@
 package comHotelReservation;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -86,33 +87,73 @@ public class HotelRunner {
     }
     
     /**
+     * gets the day of the date given
+     * date time API used
+     * @return
+     */
+    public DayOfWeek getDayOfDate(LocalDate date){
+        DayOfWeek day = date.getDayOfWeek();
+        return day;
+    }
+    
+    /**
      * date iterator
-     *
+     * and cost calculator
      * @return
      */
     public String costCalculator(LocalDate checkin, LocalDate checkout) {
         
-        int lakewoodCost = hotelMap.get("Lakewood").getWeekDayCostForRegularCustomer();
-        int bridgewoodCost = hotelMap.get("Bridgewood").getWeekDayCostForRegularCustomer();
-        int ridgewoodCost = hotelMap.get("Ridgewood").getWeekDayCostForRegularCustomer();
+        int lakewoodWeekDayCost = hotelMap.get("Lakewood").getWeekDayCostForRegularCustomer();
+        int bridgewoodWeekDayCost = hotelMap.get("Bridgewood").getWeekDayCostForRegularCustomer();
+        int ridgewoodWeekDayCost = hotelMap.get("Ridgewood").getWeekDayCostForRegularCustomer();
         
-        for(LocalDate date = checkin; date.isBefore(checkout); date = date.plusDays(1)) {
-            lakewoodCost += lakewoodCost;
-            bridgewoodCost += bridgewoodCost;
-            ridgewoodCost += ridgewoodCost;
+        int lakewoodWeekendCost = hotelMap.get("Lakewood").getWeekEndCostForRegularCustomer();
+        int bridgewoodWeekendCost = hotelMap.get("Bridgewood").getWeekEndCostForRegularCustomer();
+        int ridgewoodWeekendCost = hotelMap.get("Ridgewood").getWeekEndCostForRegularCustomer();
+    
+        int lakewoodWeekCost = 0;
+        int bridgewoodWeekCost = 0;
+        int ridgewoodWeekCost = 0;
+        
+        for(LocalDate date = checkin; date.isBefore(checkout) || date.isEqual(checkout); date = date.plusDays(1)) {
+           
+            DayOfWeek day = getDayOfDate(date);
+           
+            if(day.toString().equals("SUNDAY") || day.toString().equals("SATURDAY")){
+                lakewoodWeekCost += lakewoodWeekendCost;
+                bridgewoodWeekCost += bridgewoodWeekendCost;
+                ridgewoodWeekCost += ridgewoodWeekendCost;
+            }
+            else{
+                lakewoodWeekCost += lakewoodWeekDayCost;
+                bridgewoodWeekCost += bridgewoodWeekDayCost;
+                ridgewoodWeekCost += ridgewoodWeekDayCost;
+            }
         }
         
-        int minCost = minimumFinder(lakewoodCost, bridgewoodCost, ridgewoodCost);
+        int minCost = minimumFinder(lakewoodWeekCost, bridgewoodWeekCost, ridgewoodWeekCost);
         
-        if(lakewoodCost == minCost) {
-            return "Lakewood, total cost = " + lakewoodCost;
+        if(lakewoodWeekCost == minCost && ridgewoodWeekCost == minCost && bridgewoodWeekCost == minCost){
+            return "All hotels cost the same!";
         }
-        if(bridgewoodCost == minCost) {
-            return "Lakewood, total cost = " + bridgewoodCost;
+        else if(ridgewoodWeekCost == minCost && bridgewoodWeekCost == minCost){
+            return "Ridgewood & Bridgewood, total cost = " + minCost;
         }
-        if(ridgewoodCost == minCost) {
-            return "Lakewood, total cost = " + ridgewoodCost;
+        else if(lakewoodWeekCost == minCost && bridgewoodWeekCost == minCost){
+            return "Lakewood & Bridgewood, total cost = " + minCost;
         }
-        return "more than one cheap hotels";
+        else if(lakewoodWeekCost == minCost && ridgewoodWeekCost == minCost){
+            return "Lakewood & Ridgewood, total cost = " + minCost;
+        }
+        else if(lakewoodWeekCost == minCost) {
+            return "Lakewood, total cost = " + minCost;
+        }
+        else if(bridgewoodWeekCost == minCost) {
+            return "Bridgewood, total cost = " + minCost;
+        }
+        else if(ridgewoodWeekCost == minCost) {
+            return "Ridgewood, total cost = " + minCost;
+        }
+        return "something went wrong!";
     }
 }
