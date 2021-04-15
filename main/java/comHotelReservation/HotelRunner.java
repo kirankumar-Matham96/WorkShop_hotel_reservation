@@ -30,16 +30,19 @@ public class HotelRunner {
         hotel1.setHotelName("Lakewood");
         hotel1.setWeekDayCostForRegularCustomer(110);
         hotel1.setWeekEndCostForRegularCustomer(90);
+        hotel1.setRating(3);
         
         //hotel2 details
         hotel2.setHotelName("Bridgewood");
         hotel2.setWeekDayCostForRegularCustomer(150);
         hotel2.setWeekEndCostForRegularCustomer(50);
+        hotel1.setRating(4);
         
         //hotel3 details
         hotel3.setHotelName("Ridgewood");
         hotel3.setWeekDayCostForRegularCustomer(220);
         hotel3.setWeekEndCostForRegularCustomer(150);
+        hotel1.setRating(5);
         
         hotelMap.put("Lakewood", hotel1);
         hotelMap.put("Bridgewood", hotel2);
