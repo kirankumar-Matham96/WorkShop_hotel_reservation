@@ -131,6 +131,8 @@ public class HotelRunner {
             }
         }
         
+        
+    
         int minCost = minimumFinder(lakewoodWeekCost, bridgewoodWeekCost, ridgewoodWeekCost);
         
         if(lakewoodWeekCost == minCost && ridgewoodWeekCost == minCost && bridgewoodWeekCost == minCost){
