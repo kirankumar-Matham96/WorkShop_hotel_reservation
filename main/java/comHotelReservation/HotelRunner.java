@@ -18,7 +18,6 @@ public class HotelRunner {
     /**
      * contains all the details of the different hotels
      */
-    
     public void setHotelDetails() {
         
         //hotels
@@ -36,13 +35,13 @@ public class HotelRunner {
         hotel2.setHotelName("Bridgewood");
         hotel2.setWeekDayCostForRegularCustomer(150);
         hotel2.setWeekEndCostForRegularCustomer(50);
-        hotel1.setRating(4);
+        hotel2.setRating(4);
         
         //hotel3 details
         hotel3.setHotelName("Ridgewood");
         hotel3.setWeekDayCostForRegularCustomer(220);
         hotel3.setWeekEndCostForRegularCustomer(150);
-        hotel1.setRating(5);
+        hotel3.setRating(5);
         
         hotelMap.put("Lakewood", hotel1);
         hotelMap.put("Bridgewood", hotel2);
@@ -84,17 +83,46 @@ public class HotelRunner {
     
     /**
      * finds minimum
+     *
+     * @param value1 cost for hotel Lakewood
+     * @param value2 cost for hotel Bridgewood
+     * @param value3 cost for hotel Ridgewood
+     * @return minimum cost
      */
     public int minimumFinder(int value1, int value2, int value3) {
         return (value1 < value2) ? ((value1 < value3) ? value1 : value3) : ((value2 < value3) ? value2 : value3);//ternary operators used
     }
     
     /**
+     * returns maximum of two
+     *
+     * @param value1 rating for hotel 1 passed
+     * @param value2 rating for hotel 2 passed
+     * @return highest rating
+     */
+    public int maximumFinder(int value1, int value2) {
+        return (value1 > value2) ? value1 : value2;//ternary operators used
+    }
+    
+    /**
+     * finds maximum
+     *
+     * @param value1 rating for hotel Lakewood
+     * @param value2 rating for hotel Bridgewood
+     * @param value3 rating for hotel Ridgewood
+     * @return highest rating
+     */
+    public int maximumFinder(int value1, int value2, int value3) {
+        return (value1 > value2) ? ((value1 > value3) ? value1 : value3) : ((value2 > value3) ? value2 : value3);//ternary operators used
+    }
+    
+    /**
      * gets the day of the date given
      * date time API used
+     *
      * @return
      */
-    public DayOfWeek getDayOfDate(LocalDate date){
+    public DayOfWeek getDayOfDate(LocalDate date) {
         DayOfWeek day = date.getDayOfWeek();
         return day;
     }
@@ -102,6 +130,7 @@ public class HotelRunner {
     /**
      * date iterator
      * and cost calculator
+     *
      * @return
      */
     public String costCalculator(LocalDate checkin, LocalDate checkout) {
@@ -113,51 +142,69 @@ public class HotelRunner {
         int lakewoodWeekendCost = hotelMap.get("Lakewood").getWeekEndCostForRegularCustomer();
         int bridgewoodWeekendCost = hotelMap.get("Bridgewood").getWeekEndCostForRegularCustomer();
         int ridgewoodWeekendCost = hotelMap.get("Ridgewood").getWeekEndCostForRegularCustomer();
-    
+        
         int lakewoodWeekCost = 0;
         int bridgewoodWeekCost = 0;
         int ridgewoodWeekCost = 0;
         
         for(LocalDate date = checkin; date.isBefore(checkout) || date.isEqual(checkout); date = date.plusDays(1)) {
-           
+            
             DayOfWeek day = getDayOfDate(date);
-           
-            if(day.toString().equals("SUNDAY") || day.toString().equals("SATURDAY")){
+            
+            if(day.toString().equals("SUNDAY") || day.toString().equals("SATURDAY")) {
                 lakewoodWeekCost += lakewoodWeekendCost;
                 bridgewoodWeekCost += bridgewoodWeekendCost;
                 ridgewoodWeekCost += ridgewoodWeekendCost;
-            }
-            else{
+            } else {
                 lakewoodWeekCost += lakewoodWeekDayCost;
                 bridgewoodWeekCost += bridgewoodWeekDayCost;
                 ridgewoodWeekCost += ridgewoodWeekDayCost;
             }
         }
         
-        
-    
         int minCost = minimumFinder(lakewoodWeekCost, bridgewoodWeekCost, ridgewoodWeekCost);
         
-        if(lakewoodWeekCost == minCost && ridgewoodWeekCost == minCost && bridgewoodWeekCost == minCost){
-            return "All hotels cost the same!";
-        }
-        else if(ridgewoodWeekCost == minCost && bridgewoodWeekCost == minCost){
-            return "Ridgewood & Bridgewood, total cost = " + minCost;
-        }
-        else if(lakewoodWeekCost == minCost && bridgewoodWeekCost == minCost){
-            return "Lakewood & Bridgewood, total cost = " + minCost;
-        }
-        else if(lakewoodWeekCost == minCost && ridgewoodWeekCost == minCost){
-            return "Lakewood & Ridgewood, total cost = " + minCost;
-        }
-        else if(lakewoodWeekCost == minCost) {
-            return "Lakewood, total cost = " + minCost;
-        }
-        else if(bridgewoodWeekCost == minCost) {
-            return "Bridgewood, total cost = " + minCost;
-        }
-        else if(ridgewoodWeekCost == minCost) {
-            return "Ridgewood, total cost = " + minCost;
+        if(lakewoodWeekCost == minCost && ridgewoodWeekCost == minCost && bridgewoodWeekCost == minCost) {
+            int highestRating = maximumFinder(hotelMap.get("Lakewood").getRating(), hotelMap.get("Bridgewood").getRating(), hotelMap.get("Ridgewood").getRating());
+            if(highestRating == hotelMap.get("Lakewood").getRating()) {
+                return "Lakewood (rating: " + highestRating + "), total cost = " + minCost;
+            } else if(highestRating == hotelMap.get("Bridgewood").getRating()) {
+                return "Bridgewood (rating: " + highestRating + "), total cost = " + minCost;
+            } else if(highestRating == hotelMap.get("Ridgewood").getRating()) {
+                return "Ridgewood (rating: " + highestRating + "), total cost = " + minCost;
+            }
+            return "All hotels rated the same!";
+        } else if(ridgewoodWeekCost == minCost && bridgewoodWeekCost == minCost) {
+            int highestRating = maximumFinder(hotelMap.get("Bridgewood").getRating(), hotelMap.get("Ridgewood").getRating());
+            if(highestRating == hotelMap.get("Bridgewood").getRating()) {
+                return "Bridgewood (rating: " + highestRating + "), total cost = " + minCost;
+            } else if(highestRating == hotelMap.get("Ridgewood").getRating()) {
+                return "Ridgewood (rating: " + highestRating + "), total cost = " + minCost;
+            }
+            return "Bridgewood (rating: " + highestRating + "), Ridgewood: total cost = " + minCost;
+        } else if(lakewoodWeekCost == minCost && bridgewoodWeekCost == minCost) {
+            int highestRating = maximumFinder(hotelMap.get("Lakewood").getRating(), hotelMap.get("Bridgewood").getRating());
+            if(highestRating == hotelMap.get("Lakewood").getRating()) {
+                System.out.println("Highest rating: " + highestRating + ", " + hotelMap.get("Lakewood").getRating());
+                return "Lakewood (rating: " + highestRating + "), total cost = " + minCost;
+            } else if(highestRating == hotelMap.get("Bridgewood").getRating()) {
+                return "Bridgewood (rating: " + highestRating + "), total cost = " + minCost;
+            }
+            return "Lakewood,Bridgewood (rating: " + highestRating + "): total cost = " + minCost;
+        } else if(lakewoodWeekCost == minCost && ridgewoodWeekCost == minCost) {
+            int highestRating = maximumFinder(hotelMap.get("Lakewood").getRating(), hotelMap.get("Ridgewood").getRating());
+            if(highestRating == hotelMap.get("Lakewood").getRating()) {
+                return "Lakewood (rating: " + highestRating + "), total cost = " + minCost;
+            } else if(highestRating == hotelMap.get("Bridgewood").getRating()) {
+                return "Ridgewood (rating: " + highestRating + "), total cost = " + minCost;
+            }
+            return "Lakewood,Ridgewood (rating: " + highestRating + "): total cost = " + minCost;
+        } else if(lakewoodWeekCost == minCost) {
+            return "Lakewood (rating: " + hotelMap.get("Lakewood").getRating() + "), total cost = " + minCost;
+        } else if(bridgewoodWeekCost == minCost) {
+            return "Bridgewood (rating: " + hotelMap.get("Bridgewood").getRating() + "), total cost = " + minCost;
+        } else if(ridgewoodWeekCost == minCost) {
+            return "Ridgewood (rating: " + hotelMap.get("Ridgewood").getRating() + "), total cost = " + minCost;
         }
         return "something went wrong!";
     }

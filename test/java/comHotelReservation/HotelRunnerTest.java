@@ -10,6 +10,6 @@ public class HotelRunnerTest {
     @Test
     public void givenRangeOfDates_returnCheapestHotelAtThatPeriod() {
         HotelRunner hotelRunner = new HotelRunner();
-        Assert.assertEquals("Lakewood & Bridgewood, total cost = 200", hotelRunner.costCalculator(LocalDate.parse("2020-09-11"), LocalDate.parse("2020-09-12")));
+        Assert.assertEquals("Bridgewood (rating: 4), total cost = 200", hotelRunner.costCalculator(LocalDate.parse("2020-09-11"), LocalDate.parse("2020-09-12")));
     }
 }
