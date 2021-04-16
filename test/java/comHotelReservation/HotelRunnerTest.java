@@ -40,4 +40,12 @@ public class HotelRunnerTest {
         HotelRunner hotelRunner = new HotelRunner();
         Assert.assertEquals("Ridgewood (rating: 5), cost = 370", hotelRunner.topRatedHotel(LocalDate.parse("2020-09-11"), LocalDate.parse("2020-09-12")));
     }
+    
+    @Test
+    public void givenCustomerTypeLoyalAndDateRange_returnCheapestBestHotelWithSpecialRewardCost() {
+        HotelRunner hotelRunner = new HotelRunner();
+        hotelRunner.customerType = 1;
+        Assert.assertEquals("Ridgewood (rating: 5), total cost = 140", hotelRunner.cheapestBestRatedHotel(LocalDate.parse("2020-09-11"), LocalDate.parse("2020-09-12")));
+        
+    }
 }

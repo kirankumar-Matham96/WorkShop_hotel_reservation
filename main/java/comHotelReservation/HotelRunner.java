@@ -3,10 +3,12 @@ package comHotelReservation;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class HotelRunner {
     
     //variables
+    int customerType;
     int lakewoodWeekDayCost;
     int bridgewoodWeekDayCost;
     int ridgewoodWeekDayCost;
@@ -20,6 +22,7 @@ public class HotelRunner {
     
     /**
      * getter for hotelMap
+     *
      * @return
      */
     public Map<String, Hotel> getHotelMap() {
@@ -79,23 +82,48 @@ public class HotelRunner {
         LocalDate checkInDate = LocalDate.parse(checkInDateTaker());
         LocalDate checkOutDate = LocalDate.parse(checkOutDateTaker());
         
-        System.out.println("Select option:\n1.Find cheapest hotel\n2.Find cheapest best rated hotel\n3.Find top rated hotel\n4.Exit");
-        Scanner scanner = new Scanner(System.in);
-        switch(scanner.nextInt()) {
-            case 1:
-                System.out.println(cheapestHotel(checkInDate, checkOutDate));//to find cheapest hotel
-                System.out.println("\n  Thanks for choosing our service!");
-                break;
-            case 2:
-                System.out.println(cheapestBestRatedHotel(checkInDate, checkOutDate));//to find cheapest best rated hotel
-                System.out.println("\n  Thanks for choosing our service!");
-                break;
-            case 3:
-                System.out.println(topRatedHotel(checkInDate, checkOutDate));//to find best rated hotel
-                System.out.println("\n  Thanks for choosing our service!");
-                break;
-            default:
-                System.out.println("\n  Thanks for choosing our service!");
+        
+        boolean isInvalid1 = true;
+        while(isInvalid1) {
+            Scanner scannerType = new Scanner(System.in);
+            System.out.println("Please select the option:\n1.Loyal Customer\n2.Regular Customer");
+            try {
+                customerType = scannerType.nextInt();
+                if(customerType == 1) {
+                    System.out.println(cheapestBestRatedHotel(checkInDate, checkOutDate));//to find cheapest best rated hotel
+                    System.out.println("\n  Thanks for choosing our service!");
+                } else {
+                    boolean isInvalid2 = true;
+                    while(isInvalid2) {
+                        try {
+                            System.out.println("Select option:\n1.Find cheapest hotel\n2.Find cheapest best rated hotel\n3.Find top rated hotel\n4.Exit");
+                            Scanner scannerRegular = new Scanner(System.in);
+                            switch(scannerRegular.nextInt()) {
+                                case 1:
+                                    System.out.println(cheapestHotel(checkInDate, checkOutDate));//to find cheapest hotel
+                                    System.out.println("\n  Thanks for choosing our service!");
+                                    break;
+                                case 2:
+                                    System.out.println(cheapestBestRatedHotel(checkInDate, checkOutDate));//to find cheapest best rated hotel
+                                    System.out.println("\n  Thanks for choosing our service!");
+                                    break;
+                                case 3:
+                                    System.out.println(topRatedHotel(checkInDate, checkOutDate));//to find best rated hotel
+                                    System.out.println("\n  Thanks for choosing our service!");
+                                    break;
+                                default:
+                                    System.out.println("\n  Thanks for choosing our service!");
+                            }
+                            isInvalid2 = false;
+                        } catch(Exception e) {
+                            System.out.println("Invalid option!");
+                        }
+                    }
+                }
+                isInvalid1 = false;
+            } catch(Exception e) {
+                System.out.println("Invalid option!");
+            }
         }
     }
     
@@ -127,9 +155,23 @@ public class HotelRunner {
      */
     public String checkInDateTaker() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter check-in date: (YYYY-MM-DD)");
-        String checkInDate = scanner.next();
-        return checkInDate;
+        
+        boolean isInvalid = true;
+        while(isInvalid) {
+            System.out.println("Please enter check-in date: (YYYY-MM-DD)");
+            String checkInDate = scanner.next();
+            try {
+                if(Pattern.matches("[0-9]{4,4}-[0-9]{2,2}-[0-9]{2,2}", checkInDate)) {
+                    isInvalid = false;
+                    return checkInDate;
+                } else {
+                    System.out.println("Invalid entry!");
+                }
+            } catch(Exception e) {
+                System.out.println("Invalid entry!");
+            }
+        }
+        return null;
     }
     
     /**
@@ -139,9 +181,22 @@ public class HotelRunner {
      */
     public String checkOutDateTaker() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter check-out date: (YYYY-MM-DD)");
-        String checkOutDate = scanner.next();
-        return checkOutDate;
+        boolean isInvalid = true;
+        while(isInvalid) {
+            System.out.println("Please enter check-out date: (YYYY-MM-DD)");
+            String checkOutDate = scanner.next();
+            try {
+                if(Pattern.matches("[0-9]{4,4}-[0-9]{2,2}-[0-9]{2,2}", checkOutDate)) {
+                    isInvalid = false;
+                    return checkOutDate;
+                } else {
+                    System.out.println("Invalid entry!");
+                }
+            } catch(Exception e) {
+                System.out.println("Invalid entry!");
+            }
+        }
+        return null;
     }
     
     /**
@@ -197,14 +252,24 @@ public class HotelRunner {
      * @param checkout
      */
     public void totalCostFinder(LocalDate checkin, LocalDate checkout) {
-        lakewoodWeekDayCost = hotelMap.get("Lakewood").getWeekDayCostForRegularCustomer();
-        bridgewoodWeekDayCost = hotelMap.get("Bridgewood").getWeekDayCostForRegularCustomer();
-        ridgewoodWeekDayCost = hotelMap.get("Ridgewood").getWeekDayCostForRegularCustomer();
-        
-        lakewoodWeekendCost = hotelMap.get("Lakewood").getWeekEndCostForRegularCustomer();
-        bridgewoodWeekendCost = hotelMap.get("Bridgewood").getWeekEndCostForRegularCustomer();
-        ridgewoodWeekendCost = hotelMap.get("Ridgewood").getWeekEndCostForRegularCustomer();
-        
+        if(customerType == 2) { //regular customer
+            lakewoodWeekDayCost = hotelMap.get("Lakewood").getWeekDayCostForRegularCustomer();
+            bridgewoodWeekDayCost = hotelMap.get("Bridgewood").getWeekDayCostForRegularCustomer();
+            ridgewoodWeekDayCost = hotelMap.get("Ridgewood").getWeekDayCostForRegularCustomer();
+    
+            lakewoodWeekendCost = hotelMap.get("Lakewood").getWeekEndCostForRegularCustomer();
+            bridgewoodWeekendCost = hotelMap.get("Bridgewood").getWeekEndCostForRegularCustomer();
+            ridgewoodWeekendCost = hotelMap.get("Ridgewood").getWeekEndCostForRegularCustomer();
+        }
+        else{ //reward customer
+            lakewoodWeekDayCost = hotelMap.get("Lakewood").getWeekDayCostForRewardCustomer();
+            bridgewoodWeekDayCost = hotelMap.get("Bridgewood").getWeekDayCostForRewardCustomer();
+            ridgewoodWeekDayCost = hotelMap.get("Ridgewood").getWeekDayCostForRewardCustomer();
+    
+            lakewoodWeekendCost = hotelMap.get("Lakewood").getWeekEndCostForRewardCustomer();
+            bridgewoodWeekendCost = hotelMap.get("Bridgewood").getWeekEndCostForRewardCustomer();
+            ridgewoodWeekendCost = hotelMap.get("Ridgewood").getWeekEndCostForRewardCustomer();
+        }
         for(LocalDate date = checkin; date.isBefore(checkout) || date.isEqual(checkout); date = date.plusDays(1)) {
             
             DayOfWeek day = getDayOfDate(date);
