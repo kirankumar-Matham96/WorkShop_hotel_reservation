@@ -5,6 +5,8 @@ public class Hotel {
     private int rating;
     private int weekDayCostForRegularCustomer;
     private int weekEndCostForRegularCustomer;
+    private int weekDayCostForRewardCustomer;
+    private int weekEndCostForRewardCustomer;
     
     public String getHotelName() {
         return hotelName;
@@ -36,5 +38,21 @@ public class Hotel {
     
     public void setWeekEndCostForRegularCustomer(int weekEndCostForRegularCustomer) {
         this.weekEndCostForRegularCustomer = weekEndCostForRegularCustomer;
+    }
+    
+    public int getWeekDayCostForRewardCustomer() {
+        return weekDayCostForRewardCustomer;
+    }
+    
+    public void setWeekDayCostForRewardCustomer(int weekDayCostForRewardCustomer) {
+        this.weekDayCostForRewardCustomer = weekDayCostForRewardCustomer;
+    }
+    
+    public int getWeekEndCostForRewardCustomer() {
+        return weekEndCostForRewardCustomer;
+    }
+    
+    public void setWeekEndCostForRewardCustomer(int weekEndCostForRewardCustomer) {
+        this.weekEndCostForRewardCustomer = weekEndCostForRewardCustomer;
     }
 }
